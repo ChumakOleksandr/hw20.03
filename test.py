@@ -128,3 +128,70 @@ car = Car("Toyota", 2015)
 car.move()
 car.start_engine()
 car.move()
+
+# Додаткове
+# ## Завдання 1 — Клас `BankCard` з лімітами та пін-кодом
+
+
+class BankCard:
+    def __init__(self, owner, balance, pin, daily_limit):
+        self.owner = owner
+        self.balance = balance
+        self.pin = pin
+        self.daily_limit = daily_limit
+        self.withdrawn_today = 0
+        self.is_authorized = False
+
+    def authorize(self, entered_pin):
+        if entered_pin == self.pin:
+            self.is_authorized = True
+            print("Авторизація успішна.")
+        else:
+            self.is_authorized = False
+            print("Невірний PIN-код. Доступ заборонено.")
+
+    def deposit(self, amount):
+        if not self.is_authorized:
+            print("Операція неможлива: користувач не авторизований.")
+            return
+
+        if amount > 0:
+            self.balance += amount
+            print(f"Рахунок поповнено на {amount} грн.")
+        else:
+            print("Сума повинна бути більшою за 0.")
+
+    def withdraw(self, amount):
+        if not self.is_authorized:
+            print("Операція неможлива: користувач не авторизований.")
+            return
+
+        if amount <= 0:
+            print("Сума зняття повинна бути більшою за 0.")
+            return
+
+        if amount > self.balance:
+            print("Недостатньо коштів на балансі.")
+            return
+
+        if self.withdrawn_today + amount > self.daily_limit:
+            print("Перевищено денний ліміт зняття.")
+            return
+
+        self.balance -= amount
+        self.withdrawn_today += amount
+        print(f"Знято {amount} грн.")
+
+    def reset_daily_limit(self):
+        self.withdrawn_today = 0
+        print("Денний ліміт успішно скинуто.")
+
+
+card = BankCard("Олександр", 5000, 1234, 2000)
+
+card.authorize(1234)
+card.deposit(500)
+card.withdraw(800)
+card.withdraw(1300)
+card.reset_daily_limit()
+card.withdraw(1300)
