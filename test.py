@@ -44,3 +44,12 @@ for student in students_list:
 # Завдання 3
 # Створіть клас Circle з атрибутом radius. Додайте метод для
 # отримання площі кола
+
+
+class Circle:
+    def __init__(self, radius):
+        self.radius = radius
+
+    def get_area(self):
+        pi = 3.141592653589793
+        return pi * (self.radius**2)
