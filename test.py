@@ -55,6 +55,10 @@ class Circle:
         return pi * (self.radius**2)
 
 
+circle = Circle(5)
+print("Площа кола:", circle.get_area())
+
+
 # Завдання 4
 # Створіть клас BankAccount з атрибутами owner та balance.
 # Додайте метод deposit для поповнення рахунку
@@ -85,3 +89,42 @@ class BankAccount:
 
     def info(self):
         print(f"Власник: {self.owner}, баланс: {self.balance} грн.")
+
+
+account = BankAccount("Олександр", 1000)
+account.deposit(500)
+account.withdraw(300)
+account.info()
+
+
+# Завдання 5
+# Створіть клас Car з атрибутами brand(марка), year(рік
+# випуску), is_ready(чи готовий до поїздки, за замовчування
+# False).
+# Додайте метод start_engine який заводить двигун, і змінює
+# атрибут is_ready
+# Додайте метод move який виводить повідомлення, що
+# автомобіль їде, або ж ще не готовий в залежності від is_ready.
+
+
+class Car:
+    def __init__(self, brand, year):
+        self.brand = brand
+        self.year = year
+        self.is_ready = False
+
+    def start_engine(self):
+        self.is_ready = True
+        print(f"Двигун автомобіля {self.brand} заведено.")
+
+    def move(self):
+        if self.is_ready:
+            print(f"Автомобіль {self.brand} їде!")
+        else:
+            print(f"Автомобіль {self.brand} ще не готовий до поїздки.")
+
+
+car = Car("Toyota", 2015)
+car.move()
+car.start_engine()
+car.move()
