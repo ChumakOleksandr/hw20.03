@@ -53,3 +53,35 @@ class Circle:
     def get_area(self):
         pi = 3.141592653589793
         return pi * (self.radius**2)
+
+
+# Завдання 4
+# Створіть клас BankAccount з атрибутами owner та balance.
+# Додайте метод deposit для поповнення рахунку
+# Додайте метод withdraw для зняття грошей з рахунку
+# Додайте метод info для виведення інформації про баланс
+
+
+class BankAccount:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self.balance = balance
+
+    def deposit(self, amount):
+        if amount > 0:
+            self.balance += amount
+            print(f"Поповнено на {amount} грн.")
+        else:
+            print("Сума поповнення повинна бути більшою за 0.")
+
+    def withdraw(self, amount):
+        if amount <= 0:
+            print("Сума зняття повинна бути більшою за 0.")
+        elif amount > self.balance:
+            print("Недостатньо коштів на рахунку.")
+        else:
+            self.balance -= amount
+            print(f"Знято {amount} грн.")
+
+    def info(self):
+        print(f"Власник: {self.owner}, баланс: {self.balance} грн.")
