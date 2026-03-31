@@ -129,3 +129,87 @@ project.add_budget(10000)
 project.complete_task("Створення backend системи", months_spent=3, task_cost=40000)
 
 project.show_info()
+
+# Завдання 2
+# Створіть клас Телефон з атрибутами:
+#  максимальний обсяг пам’яті
+# Практичне завдання
+#  зайнята пам’ять
+#  чи включений(за замовчуванням False)
+#  встановлені додатки у вигляді словника, де ключ –
+# назва додатку, значення – обсяг пам’яті
+# Додайте методи:
+#  вивести інформацію про використання пам’яті
+#  видалити додаток
+#  встановити новий додаток, якщо пам’яті достатньо
+#  оновити додаток(нова версія може займати іншу
+# кількість пам’яті)
+#  запустити додаток, якщо він є і якщо телефон
+# вкючений
+#  включити телефон
+#  виключити телефон
+
+
+class Phone:
+    def __init__(self, max_storage: int):
+        self.max_storage = max_storage  # максимальна памʼять
+        self.used_storage = 0  # зайнята памʼять
+        self.is_turned_on = False  # стан телефону
+        self.installed_apps: dict[str, int] = {}  # додатки
+
+    def show_memory_info(self):
+        free_space = self.max_storage - self.used_storage
+        print(f"\nМаксимальна пам'ять: {self.max_storage} МБ")
+        print(f"Використано: {self.used_storage} МБ")
+        print(f"Вільно: {free_space} МБ")
+
+        print("\nВстановлені додатки:")
+        if not self.installed_apps:
+            print(" (немає додатків)")
+        else:
+            for app_name, size in self.installed_apps.items():
+                print(f" - {app_name}: {size} МБ")
+        print()
+
+    def install_app(self, app_name: str, app_size: int):
+        if app_name in self.installed_apps:
+            print(f"Додаток '{app_name}' вже встановлений.")
+            return
+
+        if self.used_storage + app_size > self.max_storage:
+            free = self.max_storage - self.used_storage
+            print(f"Недостатньо пам'яті! Потрібно {app_size} МБ, доступно {free} МБ.")
+            return
+
+        self.installed_apps[app_name] = app_size
+        self.used_storage += app_size
+        print(f"Додаток '{app_name}' встановлено ({app_size} МБ).")
+
+    def delete_app(self, app_name: str):
+        if app_name not in self.installed_apps:
+            print(f"Додаток '{app_name}' не знайдено.")
+            return
+
+        removed_size = self.installed_apps.pop(app_name)
+        self.used_storage -= removed_size
+        print(f"Додаток '{app_name}' видалено. Звільнено {removed_size} МБ.")
+
+    def update_app(self, app_name: str, new_size: int):
+        if app_name not in self.installed_apps:
+            print(f"Додаток '{app_name}' не встановлений.")
+            return
+
+        old_size = self.installed_apps[app_name]
+        size_diff = new_size - old_size
+
+        if size_diff > 0 and self.used_storage + size_diff > self.max_storage:
+            print(f"Недостатньо пам'яті! Потрібно {size_diff} МБ додатково.")
+            return
+
+        self.installed_apps[app_name] = new_size
+        self.used_storage += size_diff
+
+        print(
+            f"Додаток '{app_name}' оновлено. "
+            f"Було: {old_size} МБ → Стало: {new_size} МБ."
+        )
