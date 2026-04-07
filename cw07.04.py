@@ -104,3 +104,30 @@ class Playlist:
 
     def __iter__(self):
         return iter(self._songs)
+
+    def add_song(self, song: Song):
+        if song not in self._songs:
+            self._songs.append(song)
+        else:
+            print(f"Пісня '{song}' вже є в плейлисті!")
+
+    def remove_song(self, song: Song):
+        if song in self._songs:
+            self._songs.remove(song)
+        else:
+            print(f"Пісні '{song}' немає в плейлисті!")
+
+
+playlist = Playlist()
+
+song1 = Song("Imagine", "John Lennon")
+song2 = Song("Bohemian Rhapsody", "Queen")
+song3 = Song("Shape of You", "Ed Sheeran")
+
+playlist.add_song(song1)
+playlist.add_song(song2)
+playlist.add_song(song3)
+
+print("Пісні у плейлисті:")
+for song in playlist:
+    print(song)
