@@ -131,3 +131,72 @@ playlist.add_song(song3)
 print("Пісні у плейлисті:")
 for song in playlist:
     print(song)
+
+# Завдання 3
+# Створіть клас Cart з атрибутами
+#  items – список товарів
+#  total – загальна ціна товарів
+# методи:
+#  __str__(self) – повертає рядок зі списком товарів
+#  __len__(self) – повертає кількість товарів
+#  __add__(self, other) – об’єднує 2 кошики та повертає
+# новий кошик
+# Створіть два кошики. Виведіть кількість товарів в кожному
+# з них. Виведіть самі кошики. Об’єднайте їх та виведіть
+# кількість товарів в новому кошику та товари в ньому
+
+
+class Cart:
+    def __init__(self, items=None):
+        if items is None:
+            self._items = []
+        else:
+            self._items = items.copy()
+        self._total = sum(price for _, price in self._items)
+
+    def __str__(self):
+        if not self._items:
+            return "Кошик порожній"
+
+        result = "Товари в кошику:\n"
+        for name, price in self._items:
+            result += f"- {name}: {price} грн\n"
+        result += f"Загальна сума: {self._total} грн"
+        return result
+
+    def __len__(self):
+        return len(self._items)
+
+    def __add__(self, other):
+        new_items = self._items + other._items
+        return Cart(new_items)
+
+    def add_item(self, name: str, price: float):
+        self._items.append((name, price))
+        self._total += price
+
+
+cart1 = Cart()
+cart2 = Cart()
+
+cart1.add_item("Хліб", 25)
+cart1.add_item("Молоко", 40)
+
+cart2.add_item("Сир", 120)
+cart2.add_item("Яблука", 60)
+cart2.add_item("Кава", 150)
+
+print("Кількість товарів у першому кошику:", len(cart1))
+print("Кількість товарів у другому кошику:", len(cart2))
+
+print("\nПерший кошик:")
+print(cart1)
+
+print("\nДругий кошик:")
+print(cart2)
+
+combined_cart = cart1 + cart2
+
+print("\nОб'єднаний кошик:")
+print("Кількість товарів:", len(combined_cart))
+print(combined_cart)
