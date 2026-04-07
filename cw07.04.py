@@ -146,21 +146,34 @@ for song in playlist:
 # кількість товарів в новому кошику та товари в ньому
 
 
+class Item:
+    def __init__(self, name: str, price: float):
+        self._name = name
+        self._price = price
+
+    def get_price(self):
+        return self._price
+
+    def __str__(self):
+        return f"{self._name}: {self._price} грн"
+
+
 class Cart:
     def __init__(self, items=None):
         if items is None:
             self._items = []
         else:
             self._items = items.copy()
-        self._total = sum(price for _, price in self._items)
+
+        self._total = sum(item.get_price() for item in self._items)
 
     def __str__(self):
         if not self._items:
             return "Кошик порожній"
 
         result = "Товари в кошику:\n"
-        for name, price in self._items:
-            result += f"- {name}: {price} грн\n"
+        for item in self._items:
+            result += f"- {item}\n"
         result += f"Загальна сума: {self._total} грн"
         return result
 
@@ -168,35 +181,35 @@ class Cart:
         return len(self._items)
 
     def __add__(self, other):
-        new_items = self._items + other._items
-        return Cart(new_items)
+        return Cart(self._items + other._items)
 
-    def add_item(self, name: str, price: float):
-        self._items.append((name, price))
-        self._total += price
+    def add_item(self, item: Item):
+        self._items.append(item)
+        self._total += item.get_price()
 
+
+item1 = Item("Хліб", 25)
+item2 = Item("Молоко", 40)
+item3 = Item("Сир", 120)
+item4 = Item("Кава", 150)
 
 cart1 = Cart()
 cart2 = Cart()
 
-cart1.add_item("Хліб", 25)
-cart1.add_item("Молоко", 40)
+cart1.add_item(item1)
+cart1.add_item(item2)
 
-cart2.add_item("Сир", 120)
-cart2.add_item("Яблука", 60)
-cart2.add_item("Кава", 150)
+cart2.add_item(item3)
+cart2.add_item(item4)
 
-print("Кількість товарів у першому кошику:", len(cart1))
-print("Кількість товарів у другому кошику:", len(cart2))
-
-print("\nПерший кошик:")
+print("Перший кошик:")
 print(cart1)
 
 print("\nДругий кошик:")
 print(cart2)
 
-combined_cart = cart1 + cart2
+cart3 = cart1 + cart2
 
 print("\nОб'єднаний кошик:")
-print("Кількість товарів:", len(combined_cart))
-print(combined_cart)
+print(f"Кількість товарів: {len(cart3)}")
+print(cart3)
