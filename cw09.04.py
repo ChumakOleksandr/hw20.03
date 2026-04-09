@@ -86,3 +86,86 @@ class Character(ABC):
             self._hp = self._max_hp
 
         print(f"{self._name} відновив {heal_hp} HP. Тепер: {self._hp}/{self._max_hp}")
+
+
+# Завдання 2
+# Створіть дочірній клас Paladin
+# Методи:
+#  attack() – наносить 4*strength урону та зменшує mana на
+# 5, якщо недостатньо, то наносить strength урону
+#  shield() – збільшує стат defense на 4+level
+#  unshield() – зменшує стат defense на 4+level
+#  heal_ally(ally) – лікує союзника на 5 + 2*level + 0.5*mana
+
+
+class Paladin(Character):
+    def __init__(
+        self, name, max_hp, level, intelligence, strength, dexterity, mana, defense
+    ):
+        super().__init__(
+            name, max_hp, level, intelligence, strength, dexterity, mana, defense
+        )
+
+    def attack(self, target):
+        if self._mana >= 5:
+            damage = 4 * self._strength
+            self._mana -= 5
+        else:
+            damage = self._strength
+
+        target.take_damage(damage)
+
+    def shield(self):
+        buff = 4 + self._level
+        self._defense += buff
+
+    def unshield(self):
+        buff = 4 + self._level
+        self._defense -= buff
+
+    def heal_ally(self, ally):
+        heal_amount = 5 + 2 * self._level + 0.5 * self._mana
+        heal_amount = int(heal_amount)
+        ally.heal(heal_amount)
+
+
+# Завдання 3
+# Створіть дочірній клас Mage
+# Методи:
+#  attack() – наносить 3*intelligence+4 урону та зменшує
+# mana на 3, якщо недостатньо, то не наносить урону
+#  fireball() – наносить 2*intelligence+3 урону по області та
+# зменшує mana на 5, якщо недостатньо, то не наносить
+# урону
+#  heal_ally(ally) – лікує союзника на 3 + level +
+# 3*intelligence
+
+
+class Mage(Character):
+    def __init__(
+        self, name, max_hp, level, intelligence, strength, dexterity, mana, defense
+    ):
+        super().__init__(
+            name, max_hp, level, intelligence, strength, dexterity, mana, defense
+        )
+
+    def attack(self, target):
+        if self._mana >= 3:
+            damage = 3 * self._intelligence + 4
+            self._mana -= 3
+            target.take_damage(damage)
+        else:
+            target.take_damage(0)
+
+    def fireball(self, targets):
+        if self._mana >= 5:
+            damage = 2 * self._intelligence + 3
+            self._mana -= 5
+            for t in targets:
+                t.take_damage(damage)
+        else:
+            return
+
+    def heal_ally(self, ally):
+        heal_amount = 3 + self._level + 3 * self._intelligence
+        ally.heal(heal_amount)
