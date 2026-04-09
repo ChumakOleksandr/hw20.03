@@ -169,3 +169,49 @@ class Mage(Character):
     def heal_ally(self, ally):
         heal_amount = 3 + self._level + 3 * self._intelligence
         ally.heal(heal_amount)
+
+
+# Завдання 4
+# Створіть дочірній клас Warrior
+# Методи:
+#  attack() – наносить 4*strength+3 урону
+#  power_strike(enemies) – проходить по списку ворогів:
+# якщо їхній рівень менший за рівень персонажа, то
+# знищує його повністю
+
+
+class Warrior(Character):
+    def __init__(
+        self, name, max_hp, level, intelligence, strength, dexterity, mana, defense
+    ):
+        super().__init__(
+            name, max_hp, level, intelligence, strength, dexterity, mana, defense
+        )
+
+    def attack(self, target):
+        damage = 4 * self._strength + 3
+        target.take_damage(damage)
+
+    def power_strike(self, enemies):
+        for enemy in enemies:
+            if enemy._level < self._level:
+                enemy.take_damage(enemy._hp)
+
+
+# Завдання 5
+# Створіть дочірній клас Rogue
+# Методи:
+#  attack() – наносить strength+level урону
+
+
+class Rogue(Character):
+    def __init__(
+        self, name, max_hp, level, intelligence, strength, dexterity, mana, defense
+    ):
+        super().__init__(
+            name, max_hp, level, intelligence, strength, dexterity, mana, defense
+        )
+
+    def attack(self, target):
+        damage = self._strength + self._level
+        target.take_damage(damage)
