@@ -17,7 +17,8 @@ fix = true
 select = ["E", "F", "W", "I", "B", "UP"]
 
 ignore = [
-    "E203"
+    "E203",
+    "B024",
 ]
 
 [tool.ruff.format]
