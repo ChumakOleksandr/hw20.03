@@ -1,5 +1,5 @@
 import json
-from typing import cast
+from typing import Any, cast
 
 # Завдання 1
 # Є словник з логінами(ключ) та паролями(значення)
@@ -161,18 +161,51 @@ new_cart.info()
 # Напишіть код, де завантажується налаштування і
 # створюються відповідні змінні size, background_color, …
 
-with open("settings.json", encoding="utf-8") as f:
-    settings: dict = json.load(f)
 
-size: list[int] = settings["size"]
-background_color: str = settings["background_color"]
-button_color: str = settings["button_color"]
-button_position: list[int] = settings["button_position"]
-instruction: str = settings["instruction"]
+SETTINGS_FILE = "settings.json"
 
 
-print("Size:", size)
-print("Background color:", background_color)
-print("Button color:", button_color)
-print("Button position:", button_position)
-print("Instruction:", instruction)
+def load_settings() -> dict[str, Any]:
+    with open(SETTINGS_FILE, encoding="utf-8") as file:
+        data = json.load(file)
+        return cast(dict[str, Any], data)
+
+
+def save_settings(settings: dict[str, Any]) -> None:
+    with open(SETTINGS_FILE, "w", encoding="utf-8") as file:
+        json.dump(settings, file, ensure_ascii=False, indent=4)
+
+
+def get_setting(settings: dict[str, Any], key: str) -> Any:
+    return settings.get(key)
+
+
+def set_setting(settings: dict[str, Any], key: str, value: Any) -> None:
+    settings[key] = value
+    save_settings(settings)
+
+
+def main() -> None:
+    settings = load_settings()
+
+    size = get_setting(settings, "size")
+    background_color = get_setting(settings, "background_color")
+    button_color = get_setting(settings, "button_color")
+    button_position = get_setting(settings, "button_position")
+    instruction = get_setting(settings, "instruction")
+
+    print("Size:", size)
+    print("Background color:", background_color)
+    print("Button color:", button_color)
+    print("Button position:", button_position)
+    print("Instruction:", instruction)
+
+    set_setting(settings, "background_color", "white")
+    set_setting(settings, "size", [800, 600])
+
+    print("\nПісля змін:")
+    print(load_settings())
+
+
+if __name__ == "__main__":
+    main()
