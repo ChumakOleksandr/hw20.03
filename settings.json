@@ -1,0 +1,8 @@
+
+{
+    "size": [500, 600],
+    "background_color": "gray",
+    "button_color": "lightgray",
+    "button_position": [100, 50],
+    "instruction": "Натисніть кнопку, щоб розпочати роботу з програмою."
+}

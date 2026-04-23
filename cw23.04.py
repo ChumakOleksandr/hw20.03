@@ -149,3 +149,30 @@ art.save()
 new_cart = Cart("")
 new_cart.load()
 new_cart.info()
+
+# Завдання 3
+# Створіть файл settings.json з базовими налаштуваннями
+# програми, наприклад графічного інтерфейсу:
+#  розмір зображення – 500х600
+#  колір фону – сірий
+#  колір кнопок – світлосірий
+#  розміщення кнопок – [100, 50]
+#  інструкція користувачу
+# Напишіть код, де завантажується налаштування і
+# створюються відповідні змінні size, background_color, …
+
+with open("settings.json", encoding="utf-8") as f:
+    settings: dict = json.load(f)
+
+size: list[int] = settings["size"]
+background_color: str = settings["background_color"]
+button_color: str = settings["button_color"]
+button_position: list[int] = settings["button_position"]
+instruction: str = settings["instruction"]
+
+
+print("Size:", size)
+print("Background color:", background_color)
+print("Button color:", button_color)
+print("Button position:", button_position)
+print("Instruction:", instruction)
