@@ -100,3 +100,110 @@ def menu() -> None:
 
 if __name__ == "__main__":
     menu()
+
+# Завдання 2
+# Напишіть клас Student
+# Атрибути:
+#  name – ім’я
+#  specialization – спеціалізація
+#  grades – список оцінок
+# Методи:
+#  add_grade(grade) – додати нову оцінку
+#  show_info() – вивести ім’я, спеціалізацію та середню
+# оцінку
+# Створіть список з трьох студентів. Збережіть цей список
+# використовуючи pickle та json.
+# Завантажте дані за допомогою pickle та json.
+
+
+class Student:
+    def __init__(self, name: str, specialization: str):
+        self._name: str = name
+        self._specialization: str = specialization
+        self._grades: list[int] = []
+
+    def add_grade(self, grade: int) -> None:
+        self._grades.append(grade)
+
+    def _average_grade(self) -> float:
+        if not self._grades:
+            return 0.0
+        return sum(self._grades) / len(self._grades)
+
+    def show_info(self) -> None:
+        print(f"Ім'я: {self._name}")
+        print(f"Спеціалізація: {self._specialization}")
+        print(f"Середня оцінка: {self._average_grade():.2f}")
+        print("-" * 30)
+
+
+def save_students_json(
+    students: list[Student], filename: str = "students.json"
+) -> None:
+    data = [
+        {
+            "name": s._name,
+            "specialization": s._specialization,
+            "grades": s._grades,
+        }
+        for s in students
+    ]
+
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+
+def load_students_json(filename: str = "students.json") -> list[Student]:
+    with open(filename, encoding="utf-8") as f:
+        data = json.load(f)
+
+    students: list[Student] = []
+    for item in cast(list[dict], data):
+        student = Student(item["name"], item["specialization"])
+        student._grades = item["grades"]
+        students.append(student)
+
+    return students
+
+
+def save_students_pickle(
+    students: list[Student], filename: str = "students.pkl"
+) -> None:
+    with open(filename, "wb") as f:
+        pickle.dump(students, f)
+
+
+def load_students_pickle(filename: str = "students.pkl") -> list[Student]:
+    with open(filename, "rb") as f:
+        data = pickle.load(f)
+        return cast(list[Student], data)
+
+
+if __name__ == "__main__":
+    s1 = Student("Іван", "Програмування")
+    s1.add_grade(90)
+    s1.add_grade(85)
+
+    s2 = Student("Олена", "Дизайн")
+    s2.add_grade(88)
+    s2.add_grade(92)
+
+    s3 = Student("Андрій", "Кібербезпека")
+    s3.add_grade(75)
+    s3.add_grade(80)
+
+    students = [s1, s2, s3]
+
+    save_students_json(students)
+    save_students_pickle(students)
+
+    students_from_json = load_students_json()
+    students_from_pickle = load_students_pickle()
+
+    print("Дані з JSON:")
+    for student in students_from_json:
+        student.show_info()
+
+    print("Дані з pickle:")
+    for student in students_from_pickle:
+        student.show_info()
