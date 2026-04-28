@@ -324,3 +324,151 @@ def bands_menu() -> None:
 
 if __name__ == "__main__":
     bands_menu()
+
+# Завдання 4
+# Контакти (телефонна книга)
+# Реалізуйте телефонну книгу.
+# Контакт містить:
+# ім’я
+# телефон
+# email
+# Функціонал:
+# додати контакт
+# видалити контакт
+# знайти контакт за ім’ям
+# показати всі контакти
+# зберегти/завантажити через json
+# зберегти/завантажити через pickle
+
+
+JSON_FILE = "contacts.json"
+PICKLE_FILE = "contacts.pkl"
+
+Contact = dict[str, str]
+ContactsBook = dict[str, Contact]
+
+
+def add_contact(contacts: ContactsBook, name: str, phone: str, email: str) -> None:
+    if name in contacts:
+        print("Контакт вже існує.")
+        return
+
+    contacts[name] = {"phone": phone, "email": email}
+    print("Контакт додано.")
+
+
+def delete_contact(contacts: ContactsBook, name: str) -> None:
+    if name not in contacts:
+        print("Контакт не знайдено.")
+        return
+
+    del contacts[name]
+    print("Контакт видалено.")
+
+
+def find_contact(contacts: ContactsBook, name: str) -> None:
+    if name not in contacts:
+        print("Контакт не знайдено.")
+        return
+
+    contact = contacts[name]
+    print(f"Ім'я: {name}")
+    print(f"Телефон: {contact['phone']}")
+    print(f"Email: {contact['email']}")
+
+
+def show_contacts(contacts: ContactsBook) -> None:
+    if not contacts:
+        print("Телефонна книга порожня.")
+        return
+
+    for name, contact in contacts.items():
+        print(f"{name}: {contact['phone']} | {contact['email']}")
+
+
+def save_contacts_json(contacts: ContactsBook) -> None:
+    with open(JSON_FILE, "w", encoding="utf-8") as f:
+        json.dump(contacts, f, ensure_ascii=False, indent=4)
+    print("Дані збережено у JSON.")
+
+
+def load_contacts_json() -> ContactsBook:
+    try:
+        with open(JSON_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+            return cast(ContactsBook, data)
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("Не вдалося завантажити JSON.")
+        return {}
+
+
+def save_contacts_pickle(contacts: ContactsBook) -> None:
+    with open(PICKLE_FILE, "wb") as f:
+        pickle.dump(contacts, f)
+    print("Дані збережено у pickle.")
+
+
+def load_contacts_pickle() -> ContactsBook:
+    try:
+        with open(PICKLE_FILE, "rb") as f:
+            data = pickle.load(f)
+            return cast(ContactsBook, data)
+    except (FileNotFoundError, pickle.UnpicklingError):
+        print("Не вдалося завантажити pickle.")
+        return {}
+
+
+def contacts_menu() -> None:
+    contacts: ContactsBook = {}
+
+    while True:
+        print("\n--- ТЕЛЕФОННА КНИГА ---")
+        print("1. Додати контакт")
+        print("2. Видалити контакт")
+        print("3. Знайти контакт")
+        print("4. Показати всі контакти")
+        print("5. Зберегти у JSON")
+        print("6. Завантажити з JSON")
+        print("7. Зберегти у pickle")
+        print("8. Завантажити з pickle")
+        print("9. Вийти")
+
+        choice = input("Оберіть пункт: ")
+
+        if choice == "1":
+            name = input("Ім'я: ")
+            phone = input("Телефон: ")
+            email = input("Email: ")
+            add_contact(contacts, name, phone, email)
+
+        elif choice == "2":
+            delete_contact(contacts, input("Ім'я контакту: "))
+
+        elif choice == "3":
+            find_contact(contacts, input("Ім'я контакту: "))
+
+        elif choice == "4":
+            show_contacts(contacts)
+
+        elif choice == "5":
+            save_contacts_json(contacts)
+
+        elif choice == "6":
+            contacts = load_contacts_json()
+
+        elif choice == "7":
+            save_contacts_pickle(contacts)
+
+        elif choice == "8":
+            contacts = load_contacts_pickle()
+
+        elif choice == "9":
+            print("До побачення!")
+            break
+
+        else:
+            print("Невірний вибір.")
+
+
+if __name__ == "__main__":
+    contacts_menu()
