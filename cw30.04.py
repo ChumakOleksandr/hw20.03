@@ -44,32 +44,88 @@ import threading
 # виведіть на екран.
 
 
-def calculate_sum(numbers: list[int], result: dict[str, float]) -> None:
-    result["sum"] = sum(numbers)
+# def calculate_sum(numbers: list[int], result: dict[str, float]) -> None:
+#     result["sum"] = sum(numbers)
+#
+#
+# def calculate_average(numbers: list[int], result: dict[str, float]) -> None:
+#     result["average"] = sum(numbers) / len(numbers) if numbers else 0
+#
+#
+# def main() -> None:
+#     input_text = input("Введіть числа через пробіл: ")
+#     string_numbers = input_text.split()
+#     numbers = [int(number) for number in string_numbers]
+#
+#     results: dict[str, float] = {}
+#
+#     sum_thread = threading.Thread(target=calculate_sum, args=(numbers, results))
+#     avg_thread = threading.Thread(target=calculate_average, args=(numbers, results))
+#
+#     sum_thread.start()
+#     avg_thread.start()
+#
+#     sum_thread.join()
+#     avg_thread.join()
+#
+#     print(f"Сума елементів: {results['sum']}")
+#     print(f"Середнє арифметичне: {results['average']}")
+#
+#
+# if __name__ == "__main__":
+#     main()
+
+# Завдання 3
+# Користувач вводить з клавіатури шлях до файлу, що
+# містить набір чисел. Після чого запускаються два потоки.
+# Перший потік створює новий файл, в який запише лише
+# парні елементи списку. Другий потік створює новий файл,
+# в який запише лише непарні елементи списку. Кількість
+# парних і непарних елементів виводиться на екран.
 
 
-def calculate_average(numbers: list[int], result: dict[str, float]) -> None:
-    result["average"] = sum(numbers) / len(numbers) if numbers else 0
+def read_numbers_from_file(path: str) -> list[int]:
+    with open(path, encoding="utf-8") as file:
+        content = file.read()
+        return [int(number) for number in content.split()]
+
+
+def write_even_numbers(numbers: list[int], result: dict[str, int]) -> None:
+    even_numbers = [num for num in numbers if num % 2 == 0]
+
+    with open("even.txt", "w", encoding="utf-8") as file:
+        file.write(" ".join(map(str, even_numbers)))
+
+    result["even_count"] = len(even_numbers)
+
+
+def write_odd_numbers(numbers: list[int], result: dict[str, int]) -> None:
+    odd_numbers = [num for num in numbers if num % 2 != 0]
+
+    with open("odd.txt", "w", encoding="utf-8") as file:
+        file.write(" ".join(map(str, odd_numbers)))
+
+    result["odd_count"] = len(odd_numbers)
 
 
 def main() -> None:
-    input_text = input("Введіть числа через пробіл: ")
-    string_numbers = input_text.split()
-    numbers = [int(number) for number in string_numbers]
+    file_path = input("Введіть шлях до файлу з числами: ")
 
-    results: dict[str, float] = {}
+    numbers = read_numbers_from_file(file_path)
 
-    sum_thread = threading.Thread(target=calculate_sum, args=(numbers, results))
-    avg_thread = threading.Thread(target=calculate_average, args=(numbers, results))
+    results: dict[str, int] = {}
 
-    sum_thread.start()
-    avg_thread.start()
+    even_thread = threading.Thread(target=write_even_numbers, args=(numbers, results))
+    odd_thread = threading.Thread(target=write_odd_numbers, args=(numbers, results))
 
-    sum_thread.join()
-    avg_thread.join()
+    even_thread.start()
+    odd_thread.start()
 
-    print(f"Сума елементів: {results['sum']}")
-    print(f"Середнє арифметичне: {results['average']}")
+    even_thread.join()
+    odd_thread.join()
+
+    print(f"Кількість парних чисел: {results['even_count']}")
+    print(f"Кількість непарних чисел: {results['odd_count']}")
 
 
 if __name__ == "__main__":
