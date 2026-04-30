@@ -1,3 +1,4 @@
+import json
 import threading
 
 # Завдання 1
@@ -84,48 +85,87 @@ import threading
 # парних і непарних елементів виводиться на екран.
 
 
-def read_numbers_from_file(path: str) -> list[int]:
-    with open(path, encoding="utf-8") as file:
-        content = file.read()
-        return [int(number) for number in content.split()]
+# def read_numbers_from_file(path: str) -> list[int]:
+#     with open(path, encoding="utf-8") as file:
+#         content = file.read()
+#         return [int(number) for number in content.split()]
+#
+#
+# def write_even_numbers(numbers: list[int], result: dict[str, int]) -> None:
+#     even_numbers = [num for num in numbers if num % 2 == 0]
+#
+#     with open("even.txt", "w", encoding="utf-8") as file:
+#         file.write(" ".join(map(str, even_numbers)))
+#
+#     result["even_count"] = len(even_numbers)
+#
+#
+# def write_odd_numbers(numbers: list[int], result: dict[str, int]) -> None:
+#     odd_numbers = [num for num in numbers if num % 2 != 0]
+#
+#     with open("odd.txt", "w", encoding="utf-8") as file:
+#         file.write(" ".join(map(str, odd_numbers)))
+#
+#     result["odd_count"] = len(odd_numbers)
+#
+#
+# def main() -> None:
+#     file_path = input("Введіть шлях до файлу з числами: ")
+#
+#     numbers = read_numbers_from_file(file_path)
+#
+#     results: dict[str, int] = {}
+#
+#     even_thread = threading.Thread(target=write_even_numbers, args=(numbers, results))
+#     odd_thread = threading.Thread(target=write_odd_numbers, args=(numbers, results))
+#
+#     even_thread.start()
+#     odd_thread.start()
+#
+#     even_thread.join()
+#     odd_thread.join()
+#
+#     print(f"Кількість парних чисел: {results['even_count']}")
+#     print(f"Кількість непарних чисел: {results['odd_count']}")
+#
+#
+# if __name__ == "__main__":
+#     main()
+
+# Завдання 4
+# Користувач вводить з клавіатури шлях до файлу та
+# слово для пошуку. Після чого запускається потік для
+# пошуку цього слова у файлі. Результат пошуку виведіть
+# на екран.
 
 
-def write_even_numbers(numbers: list[int], result: dict[str, int]) -> None:
-    even_numbers = [num for num in numbers if num % 2 == 0]
+def search_word_in_json(file_path: str, word: str, result: dict[str, int]) -> None:
+    with open(file_path, encoding="utf-8") as file:
+        data = json.load(file)
 
-    with open("even.txt", "w", encoding="utf-8") as file:
-        file.write(" ".join(map(str, even_numbers)))
+    text = str(data)
 
-    result["even_count"] = len(even_numbers)
-
-
-def write_odd_numbers(numbers: list[int], result: dict[str, int]) -> None:
-    odd_numbers = [num for num in numbers if num % 2 != 0]
-
-    with open("odd.txt", "w", encoding="utf-8") as file:
-        file.write(" ".join(map(str, odd_numbers)))
-
-    result["odd_count"] = len(odd_numbers)
+    count = text.count(word)
+    result["count"] = count
 
 
 def main() -> None:
-    file_path = input("Введіть шлях до файлу з числами: ")
+    file_path = input("Введіть шлях до JSON-файлу: ")
+    word = input("Введіть слово для пошуку: ")
 
-    numbers = read_numbers_from_file(file_path)
+    result: dict[str, int] = {}
 
-    results: dict[str, int] = {}
+    search_thread = threading.Thread(
+        target=search_word_in_json, args=(file_path, word, result)
+    )
 
-    even_thread = threading.Thread(target=write_even_numbers, args=(numbers, results))
-    odd_thread = threading.Thread(target=write_odd_numbers, args=(numbers, results))
+    search_thread.start()
+    search_thread.join()
 
-    even_thread.start()
-    odd_thread.start()
-
-    even_thread.join()
-    odd_thread.join()
-
-    print(f"Кількість парних чисел: {results['even_count']}")
-    print(f"Кількість непарних чисел: {results['odd_count']}")
+    if result["count"] > 0:
+        print(f"Слово '{word}' знайдено {result['count']} раз(ів) у JSON.")
+    else:
+        print(f"Слово '{word}' не знайдено у JSON.")
 
 
 if __name__ == "__main__":
