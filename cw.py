@@ -91,7 +91,9 @@ def load_books() -> list[Book]:
 
 def save_books(books: list[Book]) -> None:
     with open(BOOKS_FILE, "w", encoding="utf-8") as file:
-        json.dump([book.dict() for book in books], file, ensure_ascii=False, indent=4)
+        json.dump(
+            [book.model_dump() for book in books], file, ensure_ascii=False, indent=4
+        )
 
 
 @app.get("/books")
