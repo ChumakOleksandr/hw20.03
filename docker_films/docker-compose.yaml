@@ -1,0 +1,24 @@
+
+version: "3.9"
+
+services:
+  films1:
+    build: .
+    image: film-app
+    environment:
+      MAX_FILMS: 5
+      DATA_FILE_PATH: "/app/films.json"
+    volumes:
+      - ./films.json:/app/films.json
+    ports:
+      - "8081:8080"
+
+  films2:
+    image: film-app
+    environment:
+      MAX_FILMS: 3
+      DATA_FILE_PATH: "/app/films.json"
+    volumes:
+      - ./films.json:/app/films.json
+    ports:
+      - "8082:8080"
