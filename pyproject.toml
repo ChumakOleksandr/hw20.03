@@ -31,3 +31,4 @@ strict_optional = true
 warn_unused_ignores = true
 warn_return_any = true
 warn_unused_configs = true
+python_executable = ".venv/Scripts/python.exe"
